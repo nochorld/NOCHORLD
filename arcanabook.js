@@ -2,8 +2,11 @@ const BOOKS = {
     arcana: {
         title: "Arcana",
 
-        sections: {
-            prologue: {
+        access: {
+            prologue: true,
+            chapters: true,
+            epilogue: true
+        },
                 title: "Prologue",
                 content: “No news was good news.
  A new box of mail stood on the glass table peacefully. But my eyes were far from it as I stared at the fireplace. It was cold so the fire was heating the house. It glowed in its usual way and it seemed to be glaring at me. At least it was better than me; in all ways. At least it glows as it does on summer nights. It heats the house like it always did. It did everything perfectly.
