@@ -1,160 +1,192 @@
-<!DOCTYPE html>  <html lang="en">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  
-    <title>Arcana - Available Books</title>  
-    <style>  
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #111111; color: #ffffff; margin: 0; padding: 20px; line-height: 1.5; -webkit-user-select: none; user-select: none; }  
-        .catalogue-header { text-align: center; margin-bottom: 25px; margin-top: 10px; }  
-        .catalogue-title { font-size: 1.4rem; font-weight: 900; color: #e50914; margin: 0; text-transform: uppercase; letter-spacing: 2px; }  
-        .catalogue-slogan { font-size: 0.75rem; color: #aaaaaa; font-weight: 600; letter-spacing: 3px; margin-top: 5px; text-transform: uppercase; }  .category-title { font-size: 1.1rem; font-weight: bold; margin: 25px 0 10px 10px; color: #ffffff; letter-spacing: 1px; text-transform: uppercase; border-left: 3px solid #e50914; padding-left: 8px; }  
-      
-    /* Netflix Horizontal Slider Container */  
-    .netflix-row { display: flex; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding: 10px; gap: 15px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }  
-    .netflix-row::-webkit-scrollbar { display: none; }  
-      
-    /* Book Card Inside Slider */  
-    .book-card { display: inline-block; min-width: 140px; width: 140px; background: #222222; border-radius: 8px; overflow: hidden; border: 1px solid #333333; box-shadow: 0 4px 10px rgba(0,0,0,0.5); vertical-align: top; cursor: pointer; transition: transform 0.2s ease; }  
-    .book-card:active { transform: scale(0.95); }  
-    .cover-placeholder { width: 100%; height: 190px; background: linear-gradient(135deg, #444444 0%, #222222 100%); display: flex; align-items: center; justify-content: center; text-align: center; padding: 10px; box-sizing: border-box; border-bottom: 2px solid #e50914; position: relative; }  
-    .cover-text { font-size: 0.9rem; font-weight: bold; color: #ffffff; white-space: normal; line-height: 1.3; text-transform: uppercase; }  
-    .cover-badge { position: absolute; top: 8px; left: 8px; background: #e50914; color: white; font-size: 0.6rem; font-weight: bold; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; }  
-    .book-info { padding: 10px; text-align: center; }  
-    .book-info-title { font-size: 0.85rem; font-weight: bold; margin: 0; color: #ffffff; text-overflow: ellipsis; overflow: hidden; }  
-      
-    /* Expandable Sneak Synopsis Panel */  
-    .synopsis-panel { display: none; background: #181818; border: 1px solid #282828; border-radius: 8px; padding: 20px; margin: 15px 10px; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); box-sizing: border-box; animation: fadeIn 0.3s ease; }  
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }  
-    .synopsis-title { font-size: 1.1rem; font-weight: bold; margin: 0 0 5px 0; color: #ffffff; }  
-    .synopsis-author { font-size: 0.75rem; color: #e50914; font-weight: bold; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px; }  
-    .synopsis-text { font-size: 0.9rem; color: #cccccc; margin-bottom: 20px; text-align: justify; white-space: normal; line-height: 1.5; }  
-      
-    /* Direct Action App Buttons */  
-    .action-btn { display: block; width: 100%; text-align: center; padding: 12px; background-color: #e50914; color: white; border: none; border-radius: 4px; font-size: 0.95rem; font-weight: bold; text-decoration: none; box-sizing: border-box; text-transform: uppercase; letter-spacing: 1px; }  
-    .action-btn:active { background-color: #b20710; }  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Arcana - Available Books</title>
+
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #111;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.5;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.catalogue-header { text-align: center; margin-bottom: 25px; }
+.catalogue-title {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #e50914;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.catalogue-slogan {
+    font-size: 0.75rem;
+    color: #aaa;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.category-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 25px 0 10px 10px;
+    border-left: 3px solid #e50914;
+    padding-left: 8px;
+}
+
+.netflix-row {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px;
+}
+
+.book-card {
+    min-width: 140px;
+    background: #222;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.cover-placeholder {
+    height: 190px;
+    background: linear-gradient(135deg,#444,#222);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.cover-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #e50914;
+    font-size: 0.6rem;
+    padding: 2px 6px;
+}
+
+.synopsis-panel {
+    display: none;
+    background: #181818;
+    padding: 20px;
+    margin: 15px 10px;
+    border-radius: 8px;
+}
+
+.action-btn {
+    display: block;
+    padding: 12px;
+    background: #e50914;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    text-decoration: none;
+}
 </style>
+</head>
 
-</head>  
-<body>  <!-- APP HEADER CONTAINER -->  
-<div class="catalogue-header">  
-    <div class="catalogue-title">NOCHORLD LibraryPlus</div>  
-    <div class="catalogue-slogan">ENTER INTO A NEW WORLD</div>  
-</div>  
+<body>
 
-<!-- GENRE 1: ROMANCE -->  
-<div class="category-title">Romance & Drama</div>  
-<div class="netflix-row">  
-      
-    <!-- BOOK A: ARCANA (CLICKABLE) -->  
-    <div class="book-card" onclick="toggleSynopsis('arcana-synopsis')">  
-        <div class="cover-placeholder">  
-            <span class="cover-badge">New</span>  
-            <div class="cover-text">Arcana</div>  
-        </div>  
-        <div class="book-info">  
-            <div class="book-info-title">Arcana: Love Story</div>  
-        </div>  
-    </div>  
+<!-- HEADER -->
+<div class="catalogue-header">
+    <div class="catalogue-title">NOCHORLD LibraryPlus</div>
+    <div class="catalogue-slogan">ENTER INTO A NEW WORLD</div>
+</div>
 
-    <!-- ROMANCE PLACEHOLDER -->  
-    <div class="book-card" onclick="toggleSynopsis('locked-romance')" style="opacity: 0.5;">  
-        <div class="cover-placeholder" style="border-bottom: 2px solid #555555;">  
-            <span class="cover-badge" style="background:#555555;">Locked</span>  
-            <div class="cover-text" style="color:#aaa;">Hearts Bound</div>  
-        </div>  
-        <div class="book-info">  
-            <div class="book-info-title">Coming Soon</div>  
-        </div>  
-    </div>  
-</div>  
+<!-- CONTINUE BUTTON -->
+<div style="text-align:center;margin-bottom:20px;">
+    <button onclick="continueReading()" class="action-btn">
+        Continue Reading
+    </button>
+</div>
 
-<!-- GENRE 2: THRILLER -->  
-<div class="category-title">Mystery & Thriller</div>  
-<div class="netflix-row">  
-      
-    <!-- THRILLER PLACEHOLDER -->  
-    <div class="book-card" onclick="toggleSynopsis('locked-thriller')" style="opacity: 0.5;">  
-        <div class="cover-placeholder" style="border-bottom: 2px solid #555555;">  
-            <span class="cover-badge" style="background:#555555;">Locked</span>  
-            <div class="cover-text" style="color:#aaa;">Silent Echo</div>  
-        </div>  
-        <div class="book-info">  
-            <div class="book-info-title">Coming Soon</div>  
-        </div>  
-    </div>  
-</div>  
+<!-- ROMANCE -->
+<div class="category-title">Romance & Drama</div>
+<div class="netflix-row">
 
-<!-- GENRE 3: SCI-FI & FANTASY -->  
-<div class="category-title">Sci-Fi & Fantasy</div>  
-<div class="netflix-row">  
-      
-    <!-- SCI-FI PLACEHOLDER -->  
-    <div class="book-card" onclick="toggleSynopsis('locked-scifi')" style="opacity: 0.5;">  
-        <div class="cover-placeholder" style="border-bottom: 2px solid #555555;">  
-            <span class="cover-badge" style="background:#555555;">Locked</span>  
-            <div class="cover-text" style="color:#aaa;">Neon Grid</div>  
-        </div>  
-        <div class="book-info">  
-            <div class="book-info-title">Coming Soon</div>  
-        </div>  
-    </div>  
-</div>  
+<div class="book-card" onclick="toggleSynopsis('arcana')">
+    <div class="cover-placeholder">
+        <span class="cover-badge">New</span>
+        Arcana
+    </div>
+</div>
 
+</div>
 
-<!-- ================= DYNAMIC SYNOPSIS PANELS ================= -->  
-  
-<!-- ARCANA SYNOPSIS (LINK FIXED HERE) -->  
-<div id="arcana-synopsis" class="synopsis-panel">  
-    <h3 class="synopsis-title">Arcana: A Love Story</h3>  
-    <div class="synopsis-author">By Enoch Olalere</div>  
-    <p class="synopsis-text">Dive into a captivating narrative where secrets unspool, choices carry heavy weight, and the boundaries of affection are pushed to their absolute limits. Follow Todd Thomas through an unforgettable journey across worlds.</p>  
-      
-    <!-- FIXED: WIRED DIRECTLY TO YOUR ARCANA CHAPTERS OVERVIEW INTERFACE -->  
-    <a href="https://nochorld.github.io/NOCHORLD/aalss.html" class="action-btn">Open Table of Contents</a>  
-</div>  
+<!-- SYNOPSIS -->
+<div id="arcana" class="synopsis-panel">
+    <h3>Arcana: A Love Story</h3>
+    <p>Dive into a story of emotion, conflict and mystery.</p>
 
-<!-- LOCKED PANEL: ROMANCE -->  
-<div id="locked-romance" class="synopsis-panel">  
-    <h3 class="synopsis-title">Butler and Beecrofts</h3>  
-    <div class="synopsis-author">Romance Collection</div>  
-    <p class="synopsis-text">An upcoming emotional romance saga. Keep your premium membership active to unlock immediate access upon publication.</p>  
-    <button class="action-btn" style="background:#444; cursor:not-allowed;" disabled>Locked</button>  
-</div>  
+    <!-- IMPORTANT: READ GATE CHECK -->
+    <a href="read.html?book=arcana&type=prologue"
+       class="action-btn"
+       onclick="return checkAccess()">
+        Open Table of Contents
+    </a>
+</div>
 
-<!-- LOCKED PANEL: THRILLER -->  
-<div id="locked-thriller" class="synopsis-panel">  
-    <h3 class="synopsis-title">Case G202</h3>  
-    <div class="synopsis-author">Thriller Collection</div>  
-    <p class="synopsis-text">A suspenseful crime mystery tracking complex investigations.</p>  
-    <button class="action-btn" style="background:#444; cursor:not-allowed;" disabled>Locked</button>  
-</div>  
+<script>
 
-<!-- LOCKED PANEL: SCI-FI -->  
-<div id="locked-scifi" class="synopsis-panel">  
-    <h3 class="synopsis-title">Neon Grid</h3>  
-    <div class="synopsis-author">Sci-Fi Collection</div>  
-    <p class="synopsis-text">A futuristic cyberpunk voyage through digital landscapes and artificial intelligence territories. Launching next term.</p>  
-    <button class="action-btn" style="background:#444; cursor:not-allowed;" disabled>Locked</button>  
-</div>  
+/* =========================
+   1. SESSION CHECK
+========================= */
+function isLoggedIn() {
+    return sessionStorage.getItem("user_authenticated") === "true";
+}
 
-<script>  
-    function toggleSynopsis(panelId) {  
-        const panels = document.querySelectorAll('.synopsis-panel');  
-        panels.forEach(panel => {  
-            if (panel.id !== panelId) {  
-                panel.style.display = 'none';  
-            }  
-        });  
+/* =========================
+   2. ACCESS GATE
+   (catalogue visible, reading protected)
+========================= */
+function checkAccess() {
+    if (!isLoggedIn()) {
+        alert("Access denied. Please authenticate in portal gate.");
+        return false;
+    }
+    return true;
+}
 
-        const targetPanel = document.getElementById(panelId);  
-        if (targetPanel.style.display === 'block') {  
-            targetPanel.style.display = 'none';  
-        } else {  
-            targetPanel.style.display = 'block';  
-            targetPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });  
-        }  
-    }  
+/* =========================
+   3. SYNOPSIS TOGGLE
+========================= */
+function toggleSynopsis(id) {
+    document.querySelectorAll(".synopsis-panel")
+        .forEach(p => p.style.display = "none");
+
+    const el = document.getElementById(id);
+    el.style.display = (el.style.display === "block") ? "none" : "block";
+}
+
+/* =========================
+   4. CONTINUE READING
+========================= */
+function continueReading() {
+    const last = localStorage.getItem("last_read_arcana");
+
+    if (!last) {
+        location.href = "read.html?book=arcana&type=prologue";
+        return;
+    }
+
+    const data = JSON.parse(last);
+
+    let url = `read.html?book=${data.book}&type=${data.type}`;
+
+    if (data.num) url += `&num=${data.num}`;
+
+    location.href = url;
+}
+
 </script>
 
-</body>  
-</html> 
+</body>
+</html>
