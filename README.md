@@ -162,7 +162,7 @@ showSuccess("Welcome, premium reader! Now dive into the world of books.");
 
 /* REDIRECT */
 setTimeout(()=>{
-window.location.href="prologue.html";
+window.location.href="https://nochorld.github.io/NOCHORLD/catalogue.html";
 },900);
 
 },700);
