@@ -54,6 +54,12 @@
             opacity: 0.4;
             cursor: not-allowed;
         }
+
+        .nav {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
 </head>
 
@@ -70,32 +76,30 @@
 <script>
 
 /* =========================
-   ACCESS CONTROL
-========================= */
-const isLoggedIn = sessionStorage.getItem("user_authenticated");
-
-if (isLoggedIn !== "true") {
+   1. HARD ACCESS GATE
+   ========================= */
+if (sessionStorage.getItem("user_authenticated") !== "true") {
     document.body.innerHTML = `
         <div style="
-            color:#f87171;
-            font-family:system-ui;
             display:flex;
             height:100vh;
             align-items:center;
             justify-content:center;
-            background:#0b0b0f;
             text-align:center;
             padding:20px;
+            font-family:system-ui;
+            color:#f87171;
+            background:#0b0b0f;
         ">
-            Access denied. Please log in through the portal.
+            Access denied. Login required.
         </div>
     `;
     throw new Error("Not authenticated");
 }
 
 /* =========================
-   URL HANDLING
-========================= */
+   2. ROUTE PARAMS
+   ========================= */
 const params = new URLSearchParams(window.location.search);
 
 const bookId = params.get("book");
@@ -106,124 +110,127 @@ const titleEl = document.getElementById("title");
 const labelEl = document.getElementById("label");
 const contentEl = document.getElementById("content");
 
+/* =========================
+   3. ERROR HANDLER
+   ========================= */
 function error(msg) {
     titleEl.innerText = "Error";
     contentEl.innerHTML = `<span class="missing">${msg}</span>`;
 }
 
 /* =========================
-   VALIDATION
-========================= */
-if (!BOOKS[bookId]) {
+   4. VALIDATE BOOK
+   ========================= */
+if (!BOOKS || !BOOKS[bookId]) {
     error("Book not found.");
-} else {
+    throw new Error("Invalid book");
+}
 
-    const book = BOOKS[bookId];
+const book = BOOKS[bookId];
+titleEl.innerText = book.title;
 
-    titleEl.innerText = book.title;
+/* =========================
+   5. PROLOGUE
+   ========================= */
+if (type === "prologue") {
 
-    /* =========================
-       PROLOGUE
-    ========================= */
-    if (type === "prologue") {
+    labelEl.innerText = "Prologue";
 
-        labelEl.innerText = "Prologue";
+    const data = book.sections?.prologue?.content;
 
-        const data = book.sections?.prologue?.content;
+    contentEl.innerText = data || "{{PROLOGUE_CONTENT}}";
 
-        contentEl.innerText = data || "{{PROLOGUE_CONTENT}}";
+    localStorage.setItem("last_read_" + bookId, JSON.stringify({
+        book: bookId,
+        type: "prologue"
+    }));
+}
 
-        // SAVE PROGRESS
+/* =========================
+   6. CHAPTER ENGINE
+   ========================= */
+else if (type === "chapter") {
+
+    const chapters = book.sections?.chapters || {};
+    const chapter = chapters[chapterNum];
+
+    const chapterKeys = Object.keys(chapters)
+        .map(n => parseInt(n))
+        .sort((a, b) => a - b);
+
+    const maxChapter = chapterKeys.length
+        ? chapterKeys[chapterKeys.length - 1]
+        : 0;
+
+    labelEl.innerText = "Chapter " + chapterNum;
+
+    if (!chapter) {
+        error("Chapter not found or not written yet.");
+    } else {
+        contentEl.innerText = chapter;
+
         localStorage.setItem("last_read_" + bookId, JSON.stringify({
             book: bookId,
-            type: "prologue"
+            type: "chapter",
+            num: chapterNum
         }));
     }
 
-    /* =========================
-       CHAPTERS + NAVIGATION
-    ========================= */
-    else if (type === "chapter") {
+    /* NAVIGATION */
+    const nav = document.createElement("div");
+    nav.className = "nav";
 
-        const chapters = book.sections?.chapters;
-        const chapter = chapters?.[chapterNum];
+    const prev = document.createElement("button");
+    const next = document.createElement("button");
 
-        labelEl.innerText = "Chapter " + chapterNum;
+    prev.innerText = "⬅ Previous";
+    next.innerText = "Next ➡";
 
-        if (!chapter) {
-            error("Chapter not found or not yet written.");
-        } else {
-            contentEl.innerText = chapter;
-
-            // SAVE PROGRESS
-            localStorage.setItem("last_read_" + bookId, JSON.stringify({
-                book: bookId,
-                type: "chapter",
-                num: chapterNum
-            }));
+    prev.onclick = () => {
+        if (chapterNum > 1) {
+            location.href =
+                `read.html?book=${bookId}&type=chapter&num=${chapterNum - 1}`;
         }
+    };
 
-        // NAVIGATION
-        const nav = document.createElement("div");
-        nav.style.marginTop = "30px";
-        nav.style.display = "flex";
-        nav.style.justifyContent = "space-between";
+    next.onclick = () => {
+        if (chapterNum < maxChapter) {
+            location.href =
+                `read.html?book=${bookId}&type=chapter&num=${chapterNum + 1}`;
+        }
+    };
 
-        const max = chapters ? Object.keys(chapters).length : 0;
+    if (chapterNum <= 1) prev.disabled = true;
+    if (chapterNum >= maxChapter) next.disabled = true;
 
-        const prev = document.createElement("button");
-        prev.innerText = "⬅ Previous";
+    nav.appendChild(prev);
+    nav.appendChild(next);
 
-        const next = document.createElement("button");
-        next.innerText = "Next ➡";
+    document.querySelector(".container").appendChild(nav);
+}
 
-        prev.onclick = () => {
-            if (chapterNum > 1) {
-                window.location.href =
-                    `read.html?book=${bookId}&type=chapter&num=${chapterNum - 1}`;
-            }
-        };
+/* =========================
+   7. EPILOGUE
+   ========================= */
+else if (type === "epilogue") {
 
-        next.onclick = () => {
-            if (chapterNum < max) {
-                window.location.href =
-                    `read.html?book=${bookId}&type=chapter&num=${chapterNum + 1}`;
-            }
-        };
+    labelEl.innerText = "Epilogue";
 
-        if (chapterNum <= 1) prev.disabled = true;
-        if (chapterNum >= max) next.disabled = true;
+    const data = book.sections?.epilogue?.content;
 
-        nav.appendChild(prev);
-        nav.appendChild(next);
+    contentEl.innerText = data || "{{EPILOGUE_CONTENT}}";
 
-        document.querySelector(".container").appendChild(nav);
-    }
+    localStorage.setItem("last_read_" + bookId, JSON.stringify({
+        book: bookId,
+        type: "epilogue"
+    }));
+}
 
-    /* =========================
-       EPILOGUE
-    ========================= */
-    else if (type === "epilogue") {
-
-        labelEl.innerText = "Epilogue";
-
-        const data = book.sections?.epilogue?.content;
-
-        contentEl.innerText = data || "{{EPILOGUE_CONTENT}}";
-
-        // SAVE PROGRESS
-        localStorage.setItem("last_read_" + bookId, JSON.stringify({
-            book: bookId,
-            type: "epilogue"
-        }));
-    }
-
-    /* =========================
-       INVALID MODE
-    ========================= */
-    else {
-        error("Invalid reading mode.");
-    }
+/* =========================
+   8. INVALID MODE
+   ========================= */
+else {
+    error("Invalid reading mode.");
 }
 
 </script>
