@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcana: A Love Story - Dashboard</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #ffffff; color: #333333; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        .hub-content { display: block; max-width: 600px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
+        
+        /* Hero Cover Section */
+        .cover-wrapper { width: 100%; display: flex; justify-content: center; margin: 20px 0 25px 0; }
+        .cover-frame { width: 160px; height: 230px; background-color: #f0f0f0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: relative; border: 1px solid #dddddd; }
+        .cover-image { width: 100%; height: 100%; object-fit: cover; }
+        .cover-placeholder { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%); color: #888888; font-size: 0.8rem; text-align: center; padding: 15px; box-sizing: border-box; font-weight: bold; }
+        
+        .book-title { font-size: 1.8rem; font-weight: 900; margin: 0; text-align: center; letter-spacing: -0.5px; color: #111111; text-transform: uppercase; }
+        .book-author { font-size: 0.85rem; color: #E50914; text-align: center; margin: 4px 0 25px 0; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
+        
+        /* Meta Tags / Genres */
+        .tag-container { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 25px; padding: 0 10px; }
+        .tag { background-color: #f5f5f5; color: #666666; font-size: 0.7rem; font-weight: bold; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid #e0e0e0; }
+        
+        /* Synopsis Section */
+        .section-header { font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #111111; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #E50914; }
+        .synopsis-body { font-size: 0.95rem; color: #555555; line-height: 1.5; margin-bottom: 35px; text-align: justify; }
+        
+        /* Menu Table Grid */
+        .chapters-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 5px; }
+        .chapter-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background-color: #fcfcfc; border-radius: 6px; color: #333333; text-decoration: none; font-weight: bold; font-size: 0.9rem; letter-spacing: 0.5px; border: 1px solid #eaeaea; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .chapter-row:active { background-color: #f5f5f5; }
+        .play-indicator { color: #E50914; font-size: 0.75rem; }
+        .locked-row { opacity: 0.5; }
+        
+        .footer-nav { text-align: center; margin: 40px 0 20px 0; }
+        .back-btn { font-size: 0.85rem; color: #999999; text-decoration: none; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+    <!-- MAIN HUB SHELF -->
+    <div id="hubContent" class="hub-content">
+        
+        <!-- COVER IMAGE CONTAINER -->
+        <div class="cover-wrapper">
+            <div class="cover-frame">
+                <img class="cover-image" src="" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="cover-placeholder">ARCANA<br>COVER PLACEHOLDER</div>
+            </div>
+        </div>
+
+        <h1 class="book-title">Arcana: A Love Story</h1>
+        <div class="book-author">Enoch Olalere</div>
+        
+        <!-- GENRES -->
+        <div class="tag-container">
+            <span class="tag">Contemporary Romance</span>
+            <span class="tag">Mystery</span>
+            <span class="tag">Suspense</span>
+            <span class="tag">Drama</span>
+            <span class="tag">Comedy</span>
+        </div>
+        
+        <!-- DESCRIPTION -->
+        <div class="section-header">Synopsis</div>
+        <div class="synopsis-body">
+            Todd, an unlucky playboy, accidentally rescues the heiress of a massive corporate empire. In return, he receives a high-paying job and a full college sponsorship. However, this sudden fortune plunges him into a world of dark corporate secrets and impending revenge that threatens his new life and romance.
+        </div>
+        
+        <!-- CONTENT TRACK LIST -->
+        <div class="section-header">Chapters</div>
+        <div class="chapters-list">
+            
+            <!-- PROLOGUE LINK (LINK UPDATED WITH YOUR LIVE PROLOGUE URL) -->
+            <a href="https://output.jsbin.com/jidiley/1" class="chapter-row">
+                <span>PROLOGUE</span>
+                <span class="play-indicator">▶</span>
+            </a>
+            
+            <!-- CHAPTERS ONE TO TWENTY FOUR -->
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>ONE</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>TWO</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>THREE</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>FOUR</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>FIVE</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>SIX</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>SEVEN</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>EIGHT</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>NINE</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>TEN</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>ELEVEN</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>TWELVE</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>THIRTEEN</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>FOURTEEN</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>FIFTEEN</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>SIXTEEN</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>SEVENTEEN</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>EIGHTEEN</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>NINETEEN</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>TWENTY</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>TWENTY ONE</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>TWENTY TWO</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>TWENTY THREE</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>TWENTY FOUR</span><span class="play-indicator">🔒</span></a>
+            
+            <!-- CLOSING SEGMENTS -->
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>EPILOGUE</span><span class="play-indicator">🔒</span></a>
+            <a href="#" class="chapter-row locked-row" onclick="return false;"><span>SNEAK PREVIEW</span><span class="play-indicator">🔒</span></a>
+
+        </div>
+
+        <div class="footer-nav">
+            <a href="#" onclick="history.back(); return false;" class="back-btn">← Return to Catalogue</a>
+        </div>
+    </div>
+</body>
+</html>
