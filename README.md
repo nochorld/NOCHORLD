@@ -1,153 +1,205 @@
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOCHORLD Portal Gate</title>
 
-    <meta charset="UTF-8">
+<style>
+body {
+    background:#0b0b0f;
+    color:#e2e8f0;
+    font-family:Segoe UI,system-ui;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+.gate-box {
+    background:#12121a;
+    padding:35px 25px;
+    border-radius:16px;
+    width:85%;
+    max-width:380px;
+    text-align:center;
+    border:1px solid #232334;
+}
 
-    <title>NOCHORLD - Secure Activation Gate</title>
+h1 { color:#6366f1; }
 
-    <style>
+input {
+    width:100%;
+    padding:14px;
+    margin-bottom:16px;
+    background:#1b1b26;
+    border:1px solid #2a2a40;
+    color:#fff;
+    border-radius:8px;
+}
 
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #111111; color: #ffffff; margin: 0; padding: 20px; line-height: 1.6; text-align: center; }
+button {
+    width:100%;
+    padding:14px;
+    background:#6366f1;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
 
-        .gate-container { max-width: 400px; margin: 60px auto; padding: 30px; border: 1px solid #333333; border-radius: 12px; background-color: #1a1a1a; box-shadow: 0 4px 15px rgba(0,0,0,0.5); box-sizing: border-box; }
+.alert-box {
+    display:none;
+    margin-top:15px;
+    padding:10px;
+    border-radius:6px;
+    background:rgba(248,113,113,0.1);
+    border:1px solid rgba(248,113,113,0.2);
+    color:#f87171;
+}
 
-        .gate-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 15px; color: #E50914; letter-spacing: 1px; }
+/* ADMIN PANEL */
+#adminPanel {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#0b0b0ff2;
+    padding:20px;
+    overflow:auto;
+}
 
-        .gate-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #444444; border-radius: 6px; font-size: 1rem; box-sizing: border-box; text-align: center; background-color: #222222; color: #ffffff; }
+.admin-box {
+    max-width:500px;
+    margin:auto;
+    background:#12121a;
+    padding:20px;
+    border-radius:12px;
+    border:1px solid #333;
+}
 
-        .gate-input::placeholder { color: #777777; }
+.admin-box h2 {
+    color:#22c55e;
+}
 
-        .gate-button { width: 100%; padding: 14px; background-color: #E50914; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; box-sizing: border-box; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .error-message { color: #ff4d4d; font-size: 0.9rem; margin-top: 15px; display: none; font-weight: 600; }
-
-        .success-message { display: none; color: #2ecc71; font-weight: bold; margin-top: 25px; line-height: 1.4; }
-
-    </style>
-
+.small-btn {
+    margin-top:8px;
+    background:#ef4444;
+}
+</style>
 </head>
 
 <body>
 
-    <div class="gate-container">
+<div class="gate-box">
+<h1>NOCHORLD PREMIUM ACCESS</h1>
 
-        <div class="gate-title">🔑 NOCHORLD ACTIVATION</div>
+<input id="usernameInput" placeholder="Username">
+<input id="passwordInput" type="password" placeholder="Access Code">
 
-        <p style="font-size: 0.9rem; color: #aaaaaa; margin-bottom: 25px;">Enter your App Username and your unique Subscription Key to unlock your global reading pass.</p>
+<button onclick="validateGate()">Authenticate</button>
+<div id="errorLog" class="alert-box"></div>
+</div>
 
-        
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+<div class="admin-box">
+<h2>ADMIN OVERRIDE PANEL</h2>
 
-        <!-- USERNAME INPUT -->
+<p>Session Controls</p>
 
-        <input type="text" id="appUsername" class="gate-input" placeholder="Enter Your App Username" autocomplete="off" required>
+<input id="targetUser" placeholder="Target username">
 
-        
+<button onclick="forceLogout()">Force Logout User</button>
+<button onclick="resetAll()">Reset ALL Sessions</button>
+<button onclick="viewSessions()">View Active Sessions</button>
 
-        <!-- UNIQUE PASSWORD INPUT -->
+<div id="sessionView" style="margin-top:10px;color:#93c5fd;"></div>
 
-        <input type="text" id="accessKey" class="gate-input" placeholder="Enter Your Subscription Key" autocomplete="off" required>
+<button class="small-btn" onclick="closeAdmin()">Close Admin Panel</button>
+</div>
+</div>
 
-        
+<script>
 
-        <button class="gate-button" onclick="verifySecureCredentials()">Activate My Pass</button>
+const userDatabase = {
+"john_user": { password:"johnnypassword" },
+"alex_reader": { password:"alexprologue" },
+"sam_guest": { password:"samcatalogue" }
+};
 
-        <div id="errorMessage" class="error-message"></div>
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "nochorld_admin_2026";
 
-        <div id="successMessage" class="success-message">🎉 ACTIVATION SUCCESSFUL!<br><span style="font-size: 0.85rem; color: #aaaaaa; font-weight: normal;">Your personal pass is active. You can now close this tab and browse all books freely.</span></div>
+function validateGate() {
 
-    </div>
+const user = document.getElementById("usernameInput").value.trim();
+const pass = document.getElementById("passwordInput").value.trim();
 
-    <script>
+/* ADMIN LOGIN */
+if (user === ADMIN_USER && pass === ADMIN_PASS) {
+    sessionStorage.setItem("is_admin","true");
+    document.getElementById("adminPanel").style.display="block";
+    return;
+}
 
-        // MASTER COMBINATION DATABASE
+/* USER LOGIN */
+const data = userDatabase[user];
 
-        // Format: "USERNAME": { key: "THE_PASSWORD", expiry: "YYYY-MM-DD" }
+if (!data || pass !== data.password) {
+    return showError("Access denied.");
+}
 
-        const secureDatabase = {
+/* SESSION OVERRIDE (FORCED LOGOUT OLD SESSION) */
+const sessionKey = "active_session_" + user;
+localStorage.setItem(sessionKey, crypto.randomUUID());
 
-            "ToddThomas99": { key: "TODD-ARCANA-JUNE", expiry: "2026-06-30" },
+sessionStorage.setItem("user_authenticated","true");
+sessionStorage.setItem("active_user",user);
 
-            "EnochReader": { key: "ENOCH-ARCANA-JUNE", expiry: "2026-06-30" }
+window.location.href="prologue.html";
+}
 
-        };
+/* ADMIN FUNCTIONS */
 
-        function verifySecureCredentials() {
+function forceLogout() {
+const u = document.getElementById("targetUser").value.trim();
+localStorage.removeItem("active_session_" + u);
+alert("User logged out: " + u);
+}
 
-            const inputUser = document.getElementById("appUsername").value.trim();
+function resetAll() {
+localStorage.clear();
+sessionStorage.clear();
+alert("All sessions cleared.");
+}
 
-            const inputKey = document.getElementById("accessKey").value.trim();
+function viewSessions() {
+let output = "";
+for (let i = 0; i < localStorage.length; i++) {
+const k = localStorage.key(i);
+if (k.startsWith("active_session_")) {
+output += k + "<br>";
+}
+}
+document.getElementById("sessionView").innerHTML = output || "No active sessions";
+}
 
-            const errorDiv = document.getElementById("errorMessage");
+function closeAdmin() {
+document.getElementById("adminPanel").style.display="none";
+}
 
-            const successDiv = document.getElementById("successMessage");
+function showError(msg) {
+const el = document.getElementById("errorLog");
+el.innerText = msg;
+el.style.display = "block";
+}
 
-            
-
-            errorDiv.style.display = "none";
-
-            successDiv.style.display = "none";
-
-            // 1. Check if username exists in your subscription database
-
-            if (secureDatabase.hasOwnProperty(inputUser)) {
-
-                const userRecord = secureDatabase[inputUser];
-
-                // 2. Check if the typed key matches that specific user's assigned key
-
-                if (userRecord.key === inputKey) {
-
-                    const expirationDate = new Date(userRecord.expiry);
-
-                    const today = new Date();
-
-                    today.setHours(0,0,0,0);
-
-                    // 3. Check if their subscription time has run out
-
-                    if (today <= expirationDate) {
-
-                        // REVEAL PASS & WRITE GLOBAL VIP TOKEN TO PHONE CHIP
-
-                        localStorage.setItem("appMySite_vip_status", "ACTIVE");
-
-                        localStorage.setItem("appMySite_expiry_date", userRecord.expiry);
-
-                        successDiv.style.display = "block";
-
-                    } else {
-
-                        errorDiv.innerText = "❌ Your premium key expired on " + userRecord.expiry + ". Please renew your subscription.";
-
-                        errorDiv.style.display = "block";
-
-                    }
-
-                } else {
-
-                    // Key does not match the username record
-
-                    errorDiv.innerText = "❌ Incorrect Key for this username. Please check your spelling.";
-
-                    errorDiv.style.display = "block";
-
-                }
-
-            } else {
-
-                // Username is completely missing from your paid list
-
-                errorDiv.innerText = "❌ Username not found on the active subscriber list. Please email your receipt to register.";
-
-                errorDiv.style.display = "block";
-
-            }
-
-        }
-
-    </script>
+</script>
 
 </body>
+</html>
