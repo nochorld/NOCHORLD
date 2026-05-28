@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOCHORLD Reader</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #0b0b0f;
+            color: #e2e8f0;
+            font-family: system-ui, sans-serif;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+        }
+
+        .title {
+            font-size: 20px;
+            color: #6366f1;
+            margin-bottom: 10px;
+        }
+
+        .section-label {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            font-size: 16px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        .missing {
+            color: #f87171;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="title" id="title">Loading...</div>
+    <div class="section-label" id="label"></div>
+    <div class="content" id="content"></div>
+</div>
+
+<script src="books.js"></script>
+
+<script>
+/*
+    URL FORMAT:
+    read.html?book=arcana&type=prologue
+    read.html?book=arcana&type=chapter&num=1
+    read.html?book=arcana&type=epilogue
+*/
+
+const params = new URLSearchParams(window.location.search);
+
+const bookId = params.get("book");
+const type = params.get("type"); // prologue | chapter | epilogue
+const chapterNum = params.get("num");
+
+const titleEl = document.getElementById("title");
+const labelEl = document.getElementById("label");
+const contentEl = document.getElementById("content");
+
+function renderMissing(msg) {
+    titleEl.innerText = "Error";
+    contentEl.innerHTML = `<span class="missing">${msg}</span>`;
+}
+
+// Validate book exists
+if (!BOOKS[bookId]) {
+    renderMissing("Book not found.");
+} else {
+
+    const book = BOOKS[bookId];
+
+    titleEl.innerText = book.title;
+
+    // PROLOGUE
+    if (type === "prologue") {
+
+        labelEl.innerText = "Prologue";
+
+        const data = book.sections.prologue?.content;
+
+        contentEl.innerText = data || "{{PROLOGUE_CONTENT}}";
+
+    }
+
+    // CHAPTERS
+    else if (type === "chapter") {
+
+        const num = parseInt(chapterNum);
+
+        labelEl.innerText = "Chapter " + num;
+
+        const chapter =
+            book.sections.chapters?.[num];
+
+        if (!chapter) {
+            renderMissing("Chapter not found or not yet written.");
+        } else {
+            contentEl.innerText = chapter;
+        }
+    }
+
+    // EPILOGUE
+    else if (type === "epilogue") {
+
+        labelEl.innerText = "Epilogue";
+
+        const data = book.sections.epilogue?.content;
+
+        contentEl.innerText = data || "{{EPILOGUE_CONTENT}}";
+    }
+
+    // INVALID TYPE
+    else {
+        renderMissing("Invalid reading mode.");
+    }
+}
+</script>
+
+</body>
+</html>
