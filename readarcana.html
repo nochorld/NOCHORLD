@@ -76,8 +76,21 @@
 <script>
 
 /* =========================
+   BASE64 DECODER ENGINE
+========================= */
+function decodeContent(data) {
+    if (!data) return "";
+
+    try {
+        return atob(data);
+    } catch (e) {
+        return "⚠ Failed to decode content.";
+    }
+}
+
+/* =========================
    1. HARD ACCESS GATE
-   ========================= */
+========================= */
 if (sessionStorage.getItem("user_authenticated") !== "true") {
     document.body.innerHTML = `
         <div style="
@@ -99,7 +112,7 @@ if (sessionStorage.getItem("user_authenticated") !== "true") {
 
 /* =========================
    2. ROUTE PARAMS
-   ========================= */
+========================= */
 const params = new URLSearchParams(window.location.search);
 
 const bookId = params.get("book");
@@ -112,7 +125,7 @@ const contentEl = document.getElementById("content");
 
 /* =========================
    3. ERROR HANDLER
-   ========================= */
+========================= */
 function error(msg) {
     titleEl.innerText = "Error";
     contentEl.innerHTML = `<span class="missing">${msg}</span>`;
@@ -120,7 +133,7 @@ function error(msg) {
 
 /* =========================
    4. VALIDATE BOOK
-   ========================= */
+========================= */
 if (!BOOKS || !BOOKS[bookId]) {
     error("Book not found.");
     throw new Error("Invalid book");
@@ -131,14 +144,14 @@ titleEl.innerText = book.title;
 
 /* =========================
    5. PROLOGUE
-   ========================= */
+========================= */
 if (type === "prologue") {
 
     labelEl.innerText = "Prologue";
 
     const data = book.sections?.prologue?.content;
 
-    contentEl.innerText = data || "{{PROLOGUE_CONTENT}}";
+    contentEl.innerText = decodeContent(data) || "{{PROLOGUE_CONTENT}}";
 
     localStorage.setItem("last_read_" + bookId, JSON.stringify({
         book: bookId,
@@ -148,7 +161,7 @@ if (type === "prologue") {
 
 /* =========================
    6. CHAPTER ENGINE
-   ========================= */
+========================= */
 else if (type === "chapter") {
 
     const chapters = book.sections?.chapters || {};
@@ -167,7 +180,7 @@ else if (type === "chapter") {
     if (!chapter) {
         error("Chapter not found or not written yet.");
     } else {
-        contentEl.innerText = chapter;
+        contentEl.innerText = decodeContent(chapter);
 
         localStorage.setItem("last_read_" + bookId, JSON.stringify({
             book: bookId,
@@ -211,14 +224,14 @@ else if (type === "chapter") {
 
 /* =========================
    7. EPILOGUE
-   ========================= */
+========================= */
 else if (type === "epilogue") {
 
     labelEl.innerText = "Epilogue";
 
     const data = book.sections?.epilogue?.content;
 
-    contentEl.innerText = data || "{{EPILOGUE_CONTENT}}";
+    contentEl.innerText = decodeContent(data) || "{{EPILOGUE_CONTENT}}";
 
     localStorage.setItem("last_read_" + bookId, JSON.stringify({
         book: bookId,
@@ -228,7 +241,7 @@ else if (type === "epilogue") {
 
 /* =========================
    8. INVALID MODE
-   ========================= */
+========================= */
 else {
     error("Invalid reading mode.");
 }
