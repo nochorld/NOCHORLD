@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NOCHORLD — Enter Into A New World</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #050505;
+    --card: rgba(20,20,20,0.78);
+    --glass: rgba(255,255,255,0.06);
+    --text: #ffffff;
+    --muted: #a8a8a8;
+    --accent: #E50914;
+    --accent-soft: rgba(229,9,20,0.25);
+    --border: rgba(255,255,255,0.08);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background:
+        radial-gradient(circle at top, rgba(229,9,20,0.18), transparent 30%),
+        linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.95)),
+        url('https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1400&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    backdrop-filter: blur(5px);
+    background: rgba(0,0,0,0.55);
+    z-index: -1;
+}
+
+/* Floating ambient particles */
+.particles {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.particles span {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    animation: float 18s linear infinite;
+}
+
+.particles span:nth-child(1){left:10%; animation-delay:0s;}
+.particles span:nth-child(2){left:25%; animation-delay:4s;}
+.particles span:nth-child(3){left:40%; animation-delay:7s;}
+.particles span:nth-child(4){left:55%; animation-delay:2s;}
+.particles span:nth-child(5){left:70%; animation-delay:9s;}
+.particles span:nth-child(6){left:85%; animation-delay:12s;}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-10vh) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Notification */
+.notification-overlay {
+    position: fixed;
+    top: -180px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(92%, 420px);
+    background: rgba(18,18,18,0.92);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--accent);
+    border-radius: 18px;
+    padding: 18px;
+    z-index: 9999;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    transition: top 0.6s ease;
+}
+
+.notification-overlay.show {
+    top: 24px;
+}
+
+.notification-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.notification-text {
+    color: #f1f1f1;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.notification-btn {
+    margin-top: 14px;
+    background: linear-gradient(135deg, #E50914, #ff3b45);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Hero Section */
+.hero {
+    padding: 80px 24px 40px;
+    text-align: center;
+}
+
+.hero-logo {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.6rem, 8vw, 5rem);
+    font-weight: 900;
+    letter-spacing: 6px;
+    color: white;
+    text-shadow: 0 0 25px rgba(229,9,20,0.55);
+}
+
+.hero-logo span {
+    color: var(--accent);
+}
+
+.hero-subtitle {
+    margin-top: 18px;
+    color: rgba(255,255,255,0.78);
+    font-size: 1rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+.hero-description {
+    margin: 28px auto 0;
+    max-width: 620px;
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* Reading Spotlight */
+.spotlight {
+    width: min(92%, 1100px);
+    margin: 20px auto 40px;
+    border-radius: 28px;
+    overflow: hidden;
+    position: relative;
+    min-height: 280px;
+    background:
+        linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.45)),
+        url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1400&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+}
+
+.spotlight-content {
+    padding: 45px;
+    max-width: 500px;
+}
+
+.spotlight-tag {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: #ffd8da;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 18px;
+}
+
+.spotlight h2 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.1;
+    margin-bottom: 16px;
+}
+
+.spotlight p {
+    color: rgba(255,255,255,0.75);
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+.spotlight-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    border-radius: 14px;
+    background: white;
+    color: black;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+/* Dashboard Grid */
+.menu-grid {
+    width: min(92%, 1100px);
+    margin: 0 auto 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.dashboard-btn {
+    position: relative;
+    overflow: hidden;
+    background: var(--card);
+    backdrop-filter: blur(18px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 28px;
+    text-decoration: none;
+    color: white;
+    transition: all 0.35s ease;
+    min-height: 180px;
+}
+
+.dashboard-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.06));
+}
+
+.dashboard-btn:hover {
+    transform: translateY(-8px);
+    border-color: rgba(229,9,20,0.45);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+}
+
+.btn-icon {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.08);
+    font-size: 1.6rem;
+    margin-bottom: 24px;
+}
+
+.dashboard-btn h3 {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+}
+
+.dashboard-btn p {
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.btn-arrow {
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+    color: var(--accent);
+    font-size: 1.1rem;
+}
+
+/* Footer */
+.footer-credits {
+    text-align: center;
+    padding: 30px 20px 50px;
+    color: rgba(255,255,255,0.35);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+}
+
+@media (max-width: 700px) {
+    .hero {
+        padding-top: 65px;
+    }
+
+    .spotlight-content {
+        padding: 30px;
+    }
+
+    .dashboard-btn {
+        min-height: auto;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+<!-- Notification -->
+<div id="appNotice" class="notification-overlay">
+    <div class="notification-title">NOCHORLD Broadcast</div>
+    <div class="notification-text">
+        📚 Welcome back, Reader.<br>
+        Your next adventure is waiting beyond the page.
+    </div>
+    <button class="notification-btn" onclick="dismissNotification()">
+        Continue Reading
+    </button>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+    <h1 class="hero-logo">N<span>O</span>CHORLD</h1>
+    <div class="hero-subtitle">Enter Into A New World</div>
+
+    <p class="hero-description">
+        A cinematic reading experience designed to pull readers into immersive stories, hidden worlds, unforgettable characters, and endless imagination.
+    </p>
+</section>
+
+<!-- Spotlight -->
+<section class="spotlight">
+    <div class="spotlight-content">
+        <div class="spotlight-tag">Featured Reading Realm</div>
+
+        <h2>Stories That Feel Alive</h2>
+
+        <p>
+            Discover premium novels, fantasy sagas, thrillers, romance, and mind-bending adventures in a deeply atmospheric reading environment.
+        </p>
+
+        <a href="https://output.jsbin.com/febigeq" class="spotlight-btn">
+            📖 Explore Library
+        </a>
+    </div>
+</section>
+
+<!-- Main Dashboard -->
+<section class="menu-grid">
+
+    <a href="https://output.jsbin.com/fijolig" class="dashboard-btn">
+        <div class="btn-icon">🔑</div>
+        <h3>Activate Subscription</h3>
+        <p>
+            Unlock premium collections, exclusive chapters, and immersive reader benefits.
+        </p>
+        <div class="btn-arrow">→</div>
+    </a>
+
+    <a href="https://jsbin.com/febigeq" class="dashboard-btn">
+        <div class="btn-icon">📚</div>
+        <h3>Browse Catalogue</h3>
+        <p>
+            Explore fantasy, sci-fi, mystery, horror, romance, and trending reader favorites.
+        </p>
+        <div class="btn-arrow">→</div>
+    </a>
+
+    <a href="#" class="dashboard-btn">
+        <div class="btn-icon">🔥</div>
+        <h3>Trending Stories</h3>
+        <p>
+            See what readers across NOCHORLD are currently obsessed with.
+        </p>
+        <div class="btn-arrow">→</div>
+    </a>
+
+</section>
+
+<div class="footer-credits">
+              NOCHORLD © 2026
+</div>
+
+<script>
+const CURRENT_NOTICE_ID = 'home_welcome_v2';
+
+window.onload = function() {
+    const seenNotice = localStorage.getItem('nochorld_home_notice_id');
+
+    if (seenNotice !== CURRENT_NOTICE_ID) {
+        setTimeout(() => {
+            document.getElementById('appNotice').classList.add('show');
+        }, 1200);
+    }
+};
+
+function dismissNotification() {
+    document.getElementById('appNotice').classList.remove('show');
+    localStorage.setItem('nochorld_home_notice_id', CURRENT_NOTICE_ID);
+}
+</script>
+
+</body>
+</html>
