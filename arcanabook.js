@@ -3,9 +3,9 @@ const BOOKS = {
         title: "Arcana",
 
         access: {
-            prologue: true,
-            chapters: true,
-            epilogue: true
+            prologue: ["guest", "reader", "premium"],
+            chapters: ["premium"],
+            epilogue: ["premium"]
         },
                 title: "Prologue",
                 content: “No news was good news.
