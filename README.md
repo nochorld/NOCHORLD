@@ -6,88 +6,98 @@
 
 <style>
 body {
-    background:#0b0b0f;
-    color:#e2e8f0;
-    font-family:Segoe UI,system-ui;
+    margin:0;
+    height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-    height:100vh;
-    margin:0;
+    background: radial-gradient(circle at top, #141425, #0b0b0f);
+    font-family: system-ui, sans-serif;
+    color:#e5e7eb;
 }
 
+/* LOGIN CARD */
 .gate-box {
-    background:#12121a;
-    padding:35px 25px;
-    border-radius:16px;
-    width:85%;
-    max-width:380px;
+    width:90%;
+    max-width:400px;
+    background:#141424;
+    border:1px solid #2a2a3a;
+    border-radius:18px;
+    padding:26px;
     text-align:center;
-    border:1px solid #232334;
+    box-shadow:0 20px 60px rgba(0,0,0,0.6);
 }
 
-h1 { color:#6366f1; }
+/* TITLE */
+h1 {
+    margin:0;
+    color:#818cf8;
+    letter-spacing:2px;
+}
 
+/* TAGLINE */
+.tagline {
+    font-size:12px;
+    color:#a1a1aa;
+    margin:10px 0 15px;
+}
+
+/* INPUTS */
 input {
     width:100%;
-    padding:14px;
-    margin-bottom:16px;
-    background:#1b1b26;
-    border:1px solid #2a2a40;
-    color:#fff;
-    border-radius:8px;
+    padding:12px;
+    margin:8px 0;
+    border-radius:10px;
+    border:1px solid #2f2f45;
+    background:#151524;
+    color:white;
+    outline:none;
 }
 
+/* BUTTON */
 button {
     width:100%;
-    padding:14px;
-    background:#6366f1;
-    color:#fff;
+    padding:12px;
+    margin-top:10px;
     border:none;
-    border-radius:8px;
-    font-weight:bold;
+    border-radius:10px;
+    background:linear-gradient(135deg,#6366f1,#4f46e5);
+    color:white;
+    font-weight:600;
     cursor:pointer;
 }
 
-.alert-box {
+/* STATUS */
+.alert-box, .success-box {
     display:none;
-    margin-top:15px;
+    margin-top:10px;
     padding:10px;
-    border-radius:6px;
-    background:rgba(248,113,113,0.1);
-    border:1px solid rgba(248,113,113,0.2);
+    border-radius:10px;
+    font-size:13px;
+}
+
+.alert-box {
+    background:rgba(239,68,68,0.1);
+    border:1px solid rgba(239,68,68,0.2);
     color:#f87171;
 }
 
-/* ADMIN PANEL */
-#adminPanel {
+.success-box {
+    background:rgba(34,197,94,0.1);
+    border:1px solid rgba(34,197,94,0.25);
+    color:#4ade80;
+}
+
+/* LOADING */
+#loadingOverlay {
     display:none;
     position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:#0b0b0ff2;
-    padding:20px;
-    overflow:auto;
-}
-
-.admin-box {
-    max-width:500px;
-    margin:auto;
-    background:#12121a;
-    padding:20px;
-    border-radius:12px;
-    border:1px solid #333;
-}
-
-.admin-box h2 {
-    color:#22c55e;
-}
-
-.small-btn {
-    margin-top:8px;
-    background:#ef4444;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+    color:#c7d2fe;
+    font-size:14px;
 }
 </style>
 </head>
@@ -95,107 +105,79 @@ button {
 <body>
 
 <div class="gate-box">
-<h1>NOCHORLD PREMIUM ACCESS</h1>
 
-<input id="usernameInput" placeholder="Username">
-<input id="passwordInput" type="password" placeholder="Access Code">
+    <h1>NOCHORLD ACCESS</h1>
 
-<button onclick="validateGate()">Authenticate</button>
-<div id="errorLog" class="alert-box"></div>
+    <div class="tagline">
+        Enter your username and your unique subscription key to activate your premium membership.
+    </div>
+
+    <input id="usernameInput" placeholder="Username">
+    <input id="passwordInput" type="password" placeholder="Access Key">
+
+    <button onclick="validateGate()">Activate Access</button>
+
+    <div id="errorLog" class="alert-box"></div>
+    <div id="successLog" class="success-box"></div>
+
 </div>
 
-<!-- ADMIN PANEL -->
-<div id="adminPanel">
-<div class="admin-box">
-<h2>ADMIN OVERRIDE PANEL</h2>
-
-<p>Session Controls</p>
-
-<input id="targetUser" placeholder="Target username">
-
-<button onclick="forceLogout()">Force Logout User</button>
-<button onclick="resetAll()">Reset ALL Sessions</button>
-<button onclick="viewSessions()">View Active Sessions</button>
-
-<div id="sessionView" style="margin-top:10px;color:#93c5fd;"></div>
-
-<button class="small-btn" onclick="closeAdmin()">Close Admin Panel</button>
-</div>
-</div>
+<div id="loadingOverlay">Authenticating...</div>
 
 <script>
 
-const userDatabase = {
-"john_user": { password:"johnnypassword" },
-"alex_reader": { password:"alexprologue" },
-"sam_guest": { password:"samcatalogue" }
+const users = {
+    "john_user": { password:"johnnypassword" },
+    "alex_reader": { password:"alexprologue" },
+    "sam_guest": { password:"samcatalogue" }
 };
 
-const ADMIN_USER = "admin";
-const ADMIN_PASS = "nochorld_admin_2026";
+function validateGate(){
 
-function validateGate() {
+const user = usernameInput.value.trim();
+const pass = passwordInput.value.trim();
 
-const user = document.getElementById("usernameInput").value.trim();
-const pass = document.getElementById("passwordInput").value.trim();
+errorLog.style.display="none";
+successLog.style.display="none";
 
-/* ADMIN LOGIN */
-if (user === ADMIN_USER && pass === ADMIN_PASS) {
-    sessionStorage.setItem("is_admin","true");
-    document.getElementById("adminPanel").style.display="block";
-    return;
-}
+const data = users[user];
 
-/* USER LOGIN */
-const data = userDatabase[user];
-
-if (!data || pass !== data.password) {
+if(!data || data.password !== pass){
     return showError("Access denied.");
 }
 
-/* SESSION OVERRIDE (FORCED LOGOUT OLD SESSION) */
-const sessionKey = "active_session_" + user;
-localStorage.setItem(sessionKey, crypto.randomUUID());
+/* LOADING */
+loadingOverlay.style.display="flex";
 
+setTimeout(()=>{
+
+loadingOverlay.style.display="none";
+
+/* SESSION */
 sessionStorage.setItem("user_authenticated","true");
 sessionStorage.setItem("active_user",user);
 
+/* SUCCESS MESSAGE */
+showSuccess("Welcome, premium reader! Now dive into the world of books.");
+
+/* REDIRECT */
+setTimeout(()=>{
 window.location.href="prologue.html";
+},900);
+
+},700);
+
 }
 
-/* ADMIN FUNCTIONS */
-
-function forceLogout() {
-const u = document.getElementById("targetUser").value.trim();
-localStorage.removeItem("active_session_" + u);
-alert("User logged out: " + u);
+/* UI */
+function showError(m){
+errorLog.innerText=m;
+errorLog.style.display="block";
 }
 
-function resetAll() {
-localStorage.clear();
-sessionStorage.clear();
-alert("All sessions cleared.");
-}
-
-function viewSessions() {
-let output = "";
-for (let i = 0; i < localStorage.length; i++) {
-const k = localStorage.key(i);
-if (k.startsWith("active_session_")) {
-output += k + "<br>";
-}
-}
-document.getElementById("sessionView").innerHTML = output || "No active sessions";
-}
-
-function closeAdmin() {
-document.getElementById("adminPanel").style.display="none";
-}
-
-function showError(msg) {
-const el = document.getElementById("errorLog");
-el.innerText = msg;
-el.style.display = "block";
+function showSuccess(m){
+successLog.innerText=m;
+successLog.style.display="block";
 }
 
 </script>
