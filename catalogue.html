@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Arcana - Available Books</title>
+<title>NOCHORLD LibraryPlus</title>
 
 <style>
 body {
@@ -13,11 +13,11 @@ body {
     margin: 0;
     padding: 20px;
     line-height: 1.5;
-    -webkit-user-select: none;
     user-select: none;
 }
 
 .catalogue-header { text-align: center; margin-bottom: 25px; }
+
 .catalogue-title {
     font-size: 1.4rem;
     font-weight: 900;
@@ -89,19 +89,19 @@ body {
     text-align: center;
     border-radius: 4px;
     text-decoration: none;
+    border: none;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <div class="catalogue-header">
     <div class="catalogue-title">NOCHORLD LibraryPlus</div>
     <div class="catalogue-slogan">ENTER INTO A NEW WORLD</div>
 </div>
 
-<!-- CONTINUE BUTTON -->
+<!-- CONTINUE READING -->
 <div style="text-align:center;margin-bottom:20px;">
     <button onclick="continueReading()" class="action-btn">
         Continue Reading
@@ -110,15 +110,14 @@ body {
 
 <!-- ROMANCE -->
 <div class="category-title">Romance & Drama</div>
+
 <div class="netflix-row">
-
-<div class="book-card" onclick="toggleSynopsis('arcana')">
-    <div class="cover-placeholder">
-        <span class="cover-badge">New</span>
-        Arcana
+    <div class="book-card" onclick="toggleSynopsis('arcana')">
+        <div class="cover-placeholder">
+            <span class="cover-badge">New</span>
+            Arcana
+        </div>
     </div>
-</div>
-
 </div>
 
 <!-- SYNOPSIS -->
@@ -126,67 +125,85 @@ body {
     <h3>Arcana: A Love Story</h3>
     <p>Dive into a story of emotion, conflict and mystery.</p>
 
-    <!-- IMPORTANT: READ GATE CHECK -->
-    <a href="read.html?book=arcana&type=prologue"
-       class="action-btn"
-       onclick="return checkAccess()">
+    <button class="action-btn" onclick="openBook('arcana')">
         Open Table of Contents
-    </a>
+    </button>
 </div>
 
 <script>
 
 /* =========================
-   1. SESSION CHECK
+   1. SESSION STATE
 ========================= */
 function isLoggedIn() {
     return sessionStorage.getItem("user_authenticated") === "true";
 }
 
 /* =========================
-   2. ACCESS GATE
-   (catalogue visible, reading protected)
+   2. BOOK ACCESS GATE
 ========================= */
-function checkAccess() {
+function openBook(bookId) {
     if (!isLoggedIn()) {
-        alert("Access denied. Please authenticate in portal gate.");
-        return false;
+        alert("Access denied. Please login via portal gate.");
+        return;
     }
-    return true;
+
+    window.location.href =
+        `read.html?book=${bookId}&type=prologue`;
 }
 
 /* =========================
    3. SYNOPSIS TOGGLE
 ========================= */
 function toggleSynopsis(id) {
-    document.querySelectorAll(".synopsis-panel")
-        .forEach(p => p.style.display = "none");
+    const panels = document.querySelectorAll(".synopsis-panel");
+
+    panels.forEach(p => {
+        if (p.id !== id) p.style.display = "none";
+    });
 
     const el = document.getElementById(id);
-    el.style.display = (el.style.display === "block") ? "none" : "block";
+
+    el.style.display =
+        (el.style.display === "block")
+        ? "none"
+        : "block";
 }
 
 /* =========================
    4. CONTINUE READING
 ========================= */
 function continueReading() {
-    const last = localStorage.getItem("last_read_arcana");
-
-    if (!last) {
-        location.href = "read.html?book=arcana&type=prologue";
+    if (!isLoggedIn()) {
+        alert("Login required.");
         return;
     }
 
-    const data = JSON.parse(last);
+    const last = localStorage.getItem("last_read_arcana");
 
-    let url = `read.html?book=${data.book}&type=${data.type}`;
+    if (!last) {
+        window.location.href =
+            "read.html?book=arcana&type=prologue";
+        return;
+    }
 
-    if (data.num) url += `&num=${data.num}`;
+    try {
+        const data = JSON.parse(last);
 
-    location.href = url;
+        let url =
+            `read.html?book=${data.book}&type=${data.type}`;
+
+        if (data.num) url += `&num=${data.num}`;
+
+        window.location.href = url;
+
+    } catch (e) {
+        window.location.href =
+            "read.html?book=arcana&type=prologue";
+    }
 }
 
 </script>
 
 </body>
-</html>
+        </html>
