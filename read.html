@@ -1,0 +1,49 @@
+Read.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Reader</title>
+
+<script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0b0b0f;
+    color: #e2e8f0;
+    padding: 20px;
+}
+
+#reader {
+    max-width: 800px;
+    margin: auto;
+}
+
+article {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #222;
+}
+
+h2 {
+    color: #ffffff;
+}
+</style>
+</head>
+
+<body>
+
+<div id="reader">Loading...</div>
+
+<script src="book.js"></script>
+
+<script>
+    // TEMP TEST: open a book automatically
+    openBook("arcana");
+</script>
+
+</body>
+</html>
