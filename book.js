@@ -10,7 +10,7 @@ const DATABASE_ID = "6a19bcd1001c67574f97";
 const COLLECTION_ID = "chapters";
 
 /**
- * Load chapters for a specific book
+ * Load chapters for a book
  */
 async function loadBook(bookId) {
     try {
@@ -31,12 +31,15 @@ async function loadBook(bookId) {
 }
 
 /**
- * Render chapters to the reader
+ * Render chapters to screen
  */
 function render(chapters) {
     const root = document.getElementById("reader");
 
-    if (!root) return;
+    if (!root) {
+        console.error("Missing #reader in HTML");
+        return;
+    }
 
     let html = "";
 
@@ -55,10 +58,12 @@ function render(chapters) {
 }
 
 /**
- * Main entry point
+ * Main function
  */
 async function openBook(bookId) {
     const chapters = await loadBook(bookId);
+
+    console.log("Loaded chapters:", chapters);
 
     if (!chapters.length) {
         document.getElementById("reader").innerHTML =
@@ -67,4 +72,4 @@ async function openBook(bookId) {
     }
 
     render(chapters);
-        }
+}
