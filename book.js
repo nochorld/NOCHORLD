@@ -12,7 +12,7 @@ const COLLECTION_ID = "chapters";
 /**
  * Load chapters for a book
  */
-async function loadBook(bookId) {
+async function loadBook(book_id) {
     try {
         const res = await databases.listDocuments(
             DATABASE_ID,
@@ -61,7 +61,7 @@ function render(chapters) {
 /**
  * Main entry point
  */
-async function openBook(bookId) {
+async function openBook(book_id) {
     console.log("Opening book:", bookId);
 
     const chapters = await loadBook(bookId);
@@ -69,4 +69,4 @@ async function openBook(bookId) {
     console.log("Loaded chapters:", chapters);
 
     render(chapters);
-                                  }
+}
