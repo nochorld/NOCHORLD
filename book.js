@@ -12,7 +12,7 @@ const COLLECTION_ID = "chapters";
 /**
  * Load chapters for a book
  */
-async function loadBook(book_id) {
+async function loadBook(bookId) {
     try {
         const res = await databases.listDocuments(
             DATABASE_ID,
@@ -38,10 +38,7 @@ async function loadBook(book_id) {
 function render(chapters) {
     const root = document.getElementById("reader");
 
-    if (!root) {
-        console.error("Missing #reader element");
-        return;
-    }
+    if (!root) return;
 
     if (!chapters.length) {
         root.innerHTML = "No chapters found.";
@@ -61,7 +58,7 @@ function render(chapters) {
 /**
  * Main entry point
  */
-async function openBook(book_id) {
+async function openBook(bookId) {
     console.log("Opening book:", bookId);
 
     const chapters = await loadBook(bookId);
