@@ -23,7 +23,9 @@ async function loadBook(bookId) {
             ]
         );
 
-        return res.documents;
+        console.log("Appwrite response:", res);
+
+        return res.documents || [];
     } catch (err) {
         console.error("Load error:", err);
         return [];
@@ -31,45 +33,40 @@ async function loadBook(bookId) {
 }
 
 /**
- * Render chapters to screen
+ * Render chapters
  */
 function render(chapters) {
     const root = document.getElementById("reader");
 
     if (!root) {
-        console.error("Missing #reader in HTML");
+        console.error("Missing #reader element");
         return;
     }
 
-    let html = "";
+    if (!chapters.length) {
+        root.innerHTML = "No chapters found.";
+        return;
+    }
 
-    chapters.forEach(ch => {
-        html += `
-            <article>
-                <h2>${ch.title}</h2>
-                <div style="white-space: pre-wrap;">
-                    ${ch.content}
-                </div>
-            </article>
-        `;
-    });
-
-    root.innerHTML = html;
+    root.innerHTML = chapters.map(ch => `
+        <article>
+            <h2>${ch.title}</h2>
+            <div style="white-space: pre-wrap;">
+                ${ch.content}
+            </div>
+        </article>
+    `).join("");
 }
 
 /**
- * Main function
+ * Main entry point
  */
 async function openBook(bookId) {
+    console.log("Opening book:", bookId);
+
     const chapters = await loadBook(bookId);
 
     console.log("Loaded chapters:", chapters);
 
-    if (!chapters.length) {
-        document.getElementById("reader").innerHTML =
-            "No chapters found.";
-        return;
-    }
-
     render(chapters);
-}
+                                  }
